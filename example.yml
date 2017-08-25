@@ -1,0 +1,23 @@
+database: sqlite:///./contact.sqlite
+tables:
+  - name: person
+    fields:
+      - name: firstname
+        type: varchar(50)
+        nullable: false
+        primary_key: true
+      - name: lastname
+        type: varchar(50)
+        nullable: false
+  - name: phone
+    fields:
+      - name: firstname
+        type: varchar(50)
+        nullable: false
+      - name: phone_number
+        type: varchar(20)
+indices:
+  - name: phone_number_index
+    table: phone
+    columns:
+      - firstname
