@@ -22,7 +22,9 @@ func createInstance(c *Config) (Interface, error) {
 
 	switch info.Type {
 	case "sqlite":
-		o := Sqlite{}
+		o := Sqlite{
+			db: info.Database,
+		}
 		o.Parse(c)
 		return &o, nil
 	}

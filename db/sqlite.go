@@ -1,14 +1,18 @@
 package db
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // Sqlite uses sqlite engine
 type Sqlite struct {
 	sql []string
+	db  string
 }
 
 // Parse to initialize Sqlite object
@@ -27,7 +31,20 @@ func (d *Sqlite) Parse(c *Config) error {
 		sql := createIndex(t)
 		d.sql = append(d.sql, sql)
 	}
+	for i := range c.Data {
+		t := c.Data[i]
+		for j := range t.Rows {
+			sql := createData(t, t.Rows[j])
+			d.sql = append(d.sql, sql)
+		}
+	}
 	return nil
+}
+
+func createData(t Datum, row []string) string {
+	fields := fmt.Sprintf("`%s`", strings.Join(t.Fields, "`, `"))
+	values := fmt.Sprintf("\"%s\"", strings.Join(row, "\", \""))
+	return fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", t.Table, fields, values)
 }
 
 func createIndex(t Index) string {
@@ -65,5 +82,23 @@ func (d *Sqlite) SQL() []string {
 
 // Execute to execute statements from SQL()
 func (d *Sqlite) Execute() error {
+	s, e := sql.Open("sqlite3", d.db)
+	if e != nil {
+		return e
+	}
+	defer s.Close()
+
+	tx, e := s.Begin()
+	if e != nil {
+		return e
+	}
+	for i := range d.sql {
+		_, e := tx.Exec(d.sql[i])
+		if e != nil {
+			return e
+		}
+	}
+	tx.Commit()
+
 	return nil
 }

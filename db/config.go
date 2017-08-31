@@ -14,6 +14,7 @@ type Config struct {
 	Database string
 	Tables   []Table
 	Indices  []Index
+	Data     []Datum
 }
 
 // Index is database index
@@ -37,6 +38,16 @@ type Field struct {
 	Nullable   bool `yaml:",omitempty"`
 	PrimaryKey bool `yaml:"primary_key,omitempty"`
 }
+
+// Datum is preload data
+type Datum struct {
+	Table  string
+	Fields []string
+	Rows   []Row
+}
+
+// Row is data row
+type Row []string
 
 // NewConfig to load config
 func NewConfig(f string) (*Config, error) {
