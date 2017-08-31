@@ -21,3 +21,13 @@ indices:
     table: phone
     columns:
       - firstname
+data:
+  - table: person
+    fields:
+      - firstname
+      - lastname
+    rows:
+      - - Peter
+        - Stevenson
+      - - Mary
+        - Ibyev
