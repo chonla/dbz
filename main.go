@@ -4,8 +4,8 @@ import (
 	"flag"
 	"strings"
 
-	"bitbucket.org/bayolab/dbz/db"
 	"github.com/chonla/console"
+	"github.com/chonla/dbz/db"
 )
 
 func main() {
