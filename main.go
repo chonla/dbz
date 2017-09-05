@@ -11,8 +11,10 @@ import (
 func main() {
 	var confFile string
 	var dumpOnly bool
+	var overwrite bool
 	flag.StringVar(&confFile, "conf", "", "configuration file")
 	flag.BoolVar(&dumpOnly, "dump", false, "do not create database, just dump sql command")
+	flag.BoolVar(&overwrite, "overwrite", false, "overwrite output")
 	flag.Parse()
 
 	dbz, err := db.NewDbz(confFile)
@@ -23,6 +25,11 @@ func main() {
 	if dumpOnly {
 		console.Printfln("%v", strings.Join(dbz.SQL(), "\n"), console.ColorWhite)
 	} else {
-		dbz.Execute()
+		e := dbz.Execute(overwrite)
+		if e != nil {
+			console.Println(e, console.ColorRed)
+		} else {
+			console.Printfln("done", console.ColorGreen)
+		}
 	}
 }

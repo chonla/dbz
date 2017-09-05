@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -81,7 +82,14 @@ func (d *Sqlite) SQL() []string {
 }
 
 // Execute to execute statements from SQL()
-func (d *Sqlite) Execute() error {
+func (d *Sqlite) Execute(overwrite bool) error {
+	if _, e := os.Stat(d.db); e == nil {
+		if overwrite {
+			os.Remove(d.db)
+		} else {
+			return errors.New("database is already exist")
+		}
+	}
 	s, e := sql.Open("sqlite3", d.db)
 	if e != nil {
 		return e

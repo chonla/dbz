@@ -4,5 +4,5 @@ package db
 type Interface interface {
 	Parse(c *Config) error
 	SQL() []string
-	Execute() error
+	Execute(o bool) error
 }
