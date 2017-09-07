@@ -73,7 +73,11 @@ func createField(f Field) string {
 	if f.PrimaryKey {
 		pk = "PRIMARY KEY"
 	}
-	return strings.TrimSpace(fmt.Sprintf("%s %s %s %s", f.Name, f.Type, nullable, pk))
+	autoinc := ""
+	if f.Autoincrement {
+		autoinc = "AUTOINCREMENT"
+	}
+	return strings.TrimSpace(fmt.Sprintf("%s %s %s %s %s", f.Name, f.Type, nullable, pk, autoinc))
 }
 
 // SQL return generated sql statements
@@ -87,7 +91,7 @@ func (d *Sqlite) Execute(overwrite bool) error {
 		if overwrite {
 			os.Remove(d.db)
 		} else {
-			return errors.New("database is already exist")
+			return errors.New("database is already exist. use -overwrite to overwrite the existing")
 		}
 	}
 	s, e := sql.Open("sqlite3", d.db)

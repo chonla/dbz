@@ -33,10 +33,11 @@ type Table struct {
 
 // Field is field
 type Field struct {
-	Name       string
-	Type       string
-	Nullable   bool `yaml:",omitempty"`
-	PrimaryKey bool `yaml:"primary_key,omitempty"`
+	Name          string
+	Type          string
+	Nullable      bool `yaml:",omitempty"`
+	PrimaryKey    bool `yaml:"primary_key,omitempty"`
+	Autoincrement bool `yaml:",omitempty"`
 }
 
 // Datum is preload data
